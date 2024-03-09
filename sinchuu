@@ -1,0 +1,644 @@
+/* 7.Silngly Linked List */
+#include<stdio.h>
+#include<stdlib.h>
+struct studentnode
+{
+ char usn[11];
+char name[30];
+ char branch[5];
+ int sem;
+ char phno[11];
+ struct studentnode *link;
+};
+typedef struct studentnode *NODE;
+NODE getnode()
+{
+ NODE newnode;
+ newnode=(NODE)malloc(sizeof(struct studentnode));
+ if(newnode==NULL)
+ return NULL;
+ printf("\nenter usn,name,branch,sem,ph.no\n");
+ scanf("%s%s%s",newnode->usn,newnode->name,newnode->branch);
+ scanf("%d%s",&newnode->sem,newnode->phno);
+ newnode->link=NULL;
+ return newnode;
+}
+void display(NODE first)
+{
+ NODE cur;
+ int count=0;
+ if(first==NULL)
+ printf("\nempty list-no student data\n");
+ else
+ {
+ cur=first;
+ printf("\n \t\t student data\t\n");
+ printf("\n USN \t NAME \t BRANCH \t SEM \t PH.NO");
+ while(cur!=NULL)
+ {
+ printf("\n%s \t %s\t %s\t %d\t %s\t",cur->usn,cur->name,cur-
+>branch,cur->sem,cur->phno);
+ cur=cur->link;
+ count=count+1;
+ }
+ printf("the no. of nodes in the list is %d",count);
+ }
+}
+NODE insertfront(NODE first)
+{
+NODE newnode;
+newnode=getnode();
+if(newnode==NULL)
+ printf("memory not available");
+else
+ newnode->link=first;
+ return newnode;
+}
+NODE insertrear(NODE first)
+{
+ NODE newnode,cur=first;
+ newnode=getnode();
+ if(newnode==NULL)
+ return newnode;
+ while(cur->link!=NULL)
+ cur=cur->link;
+ cur->link=newnode;
+ return first;
+}
+NODE deletefront(NODE first)
+{
+ NODE temp;
+ if(first==NULL)
+ printf("\n list is empty");
+else 
+{
+ temp=first;
+ first=first->link;
+ free(temp);
+}
+return first;
+}
+NODE deleterear(NODE first)
+{
+NODE cur=first,prev=first;
+if(first==NULL)
+{
+printf("\nlist is empty");
+ return;
+}
+if(first->link==NULL)
+{
+ free(first);
+ first=NULL;
+}
+else
+{
+ while(cur->link!=NULL)
+ {
+ prev=cur;
+ cur=cur->link;
+ }
+ free(cur);
+ prev->link=NULL;
+}
+return first;
+}
+NODE stacksimulation(NODE first)
+{
+int ch;
+ while(ch!=3) 
+ {
+ printf("\n SLL used as stack");
+ printf("\n 1.push(insert at front)\t 2.pop(delete at front)\t 3.exit");
+ printf("enter your choice:");
+ scanf("%d",&ch);
+ switch(ch)
+ {
+ case 1 : first=insertfront(first);
+ break;
+ case 2 : first=deletefront(first);
+ break;
+ case 3 : return first;
+ }//while(ch!=3);
+ display(first);
+return first;
+}
+}
+NODE createlist(NODE first)
+{
+ int i,n;
+ printf("enter the no. of student we need to add to list:");
+ scanf("%d",&n);
+ for(i=0;i<n;i++)
+ first=insertfront(first);
+ return first;
+}
+int main()
+{
+ int ch;
+NODE first;first=NULL;
+ printf("\n-------student database--------\n");
+ while(1)
+ {
+ printf("\n1.create \t 2.insert front \t 3.insert rear \t 4.delete front \n 5.delete 
+rear \t 6.stack simulation \t 7.display\t 8.exit");
+ printf("\nenter choice:");
+ scanf("%d",&ch);
+ switch(ch)
+ {
+ case 1 : first=createlist(first);
+ break;
+ case 2 : first=insertfront(first);
+ break;
+ case 3 : first=insertrear(first);
+ break;
+ case 4 : first=deletefront(first);
+ break;
+ case 5 : first=deleterear(first);
+ break;
+ case 6 : first=stacksimulation(first);
+ break;
+ case 7 : display(first);
+ break;
+ case 8 : exit(0);
+ }
+}
+}
+
+
+8.Doubly Linked Lists 
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+struct node
+{ 
+ int ssn;
+ char name[20];
+ char desi[20];
+ char dept[20];
+ int sal;
+ char ph[20];
+ struct node *llink;
+ struct node *rlink;
+};
+typedef struct node *NODE;
+NODE insertfront(NODE first)
+{
+ NODE temp;
+ temp=(NODE)malloc(sizeof(struct node));
+ printf("enter employee details");
+ printf("\nenter ssn,name,dept,desig,salary,phone no.:\n");
+ scanf("%d",&temp->ssn);
+ scanf("%s",temp->name);
+ scanf("%s",temp->dept);
+ scanf("%s",temp->desi);
+ scanf("%d",&temp->sal);
+ scanf("%s",temp->ph);
+ if(first==NULL)
+ return temp;
+ temp->rlink=first;
+ first->llink=temp;
+ temp->llink=NULL;
+ return temp;
+}
+NODE insertrear(NODE first)
+{
+ NODE temp,cur;
+ temp=(NODE)malloc(sizeof(struct node));
+ printf("\nenter employee details\n");
+ printf("\nenter ssn,name,dept,desig,salary,phone no.:\n");
+ scanf("%d",&temp->ssn);
+ scanf("%s",temp->name);
+ scanf("%s",temp->dept);
+ scanf("%s",temp->desi);
+ scanf("%d",&temp->sal);
+ scanf("%s",temp->ph); 
+ if(first==NULL)
+ return temp;
+ cur=first;
+ while(cur->rlink!=NULL)
+ cur=cur->rlink;
+ cur->rlink=temp;
+ temp->llink=cur;
+ temp->rlink=NULL;
+ return first;
+}
+NODE deletefront(NODE first)
+{ 
+NODE temp;
+if(first==NULL)
+{
+ printf("\nlist is empty");
+ return;
+}
+if(first->rlink==NULL)
+{
+ printf("\nemployee details deleted ssn:%d\n",first->ssn);
+ free(first);
+ return NULL;
+}
+temp=first->rlink;
+temp->llink=NULL;
+printf("\nemp details ssn:%d\n",first->ssn);
+free(first);
+return temp;
+}
+NODE deleterear(NODE first)
+{
+ NODE temp,cur;
+ if(first==NULL)
+ {
+ printf("\nempty list\n");
+ return;
+ }
+ if(first->rlink==NULL)
+ {
+ printf("\nemp details ssn:%d\n",first->ssn);
+ free(first);
+ return NULL;
+ }
+ cur=first;
+ while(cur->rlink!=NULL)
+ cur=cur->rlink;
+ temp=cur->llink;
+ printf("\nemp details ssn:%d\n",cur->ssn);
+ temp->rlink=NULL;
+ free(cur);
+ return first;
+}
+void display(NODE first)
+{
+NODE cur; int c=0;
+ if(first==NULL)
+ {
+ printf("\nlist is empty\n");
+ return;
+ }
+ cur=first;
+ while(cur!=NULL)
+ {
+ printf("\n%d\n%d\n%s\n%s\n%s\n%s\n",cur->ssn,cur->sal,cur->name,cur-
+>dept,cur->desi,cur->ph);
+cur=cur->rlink; c++;
+ }
+ printf("\nno. of emp=%d\n",c);
+}
+void main()
+{
+ NODE first;
+ int ch;
+ first=NULL;
+ while(1)
+ {
+ printf("\n1.insert front\t 2.insert rear\t 3.delete front\n4.delete 
+rear\t5.display\t 6.exit");
+ printf("\nenter choice:");
+ scanf("%d",&ch);
+ switch(ch)
+ {
+ case 1 : first=insertfront(first);
+ break;
+ case 2 : first=insertrear(first);
+ break;
+ case 3 : first=deletefront(first);
+ break;
+ case 4 : first=deleterear(first); 
+ break;
+ case 5 : display(first);
+ break;
+ case 6 : exit(0);
+ }
+ }
+
+
+/* 9.Polynomial operations using Circular singly linked lists */
+#include<stdio.h>
+#include<stdlib.h>
+#include<math.h>
+struct poly
+{
+ int cf,px,py,pz;
+ int flag;
+ struct poly *link;
+};
+typedef struct poly *NODE;
+NODE insertrear(NODE h,int cf,int px,int py,int pz)
+{
+ NODE temp,cur;
+ temp=(NODE)malloc(sizeof(struct poly));
+ temp->cf=cf;
+ temp->px=px;
+ temp->py=py;
+ temp->pz=pz;
+ if(h->link==h)
+ {
+ h->link=temp;
+ temp->link=h; 
+ return h;
+}
+ cur=h->link;
+ while(cur->link!=h)
+ cur=cur->link;
+ cur->link=temp;
+ temp->link=h;
+ return h;
+}
+NODE readpoly(NODE h)
+{
+ int cf,px,py,pz,ch;
+ do
+ {
+ printf("enter co-eff,px,py,pz:");
+ scanf("%d%d%d%d",&cf,&px,&py,&pz);
+ h=insertrear(h,cf,px,py,pz);
+ printf("\n1 to continue 0 to exit:");
+ scanf("%d",&ch);
+ }while(ch!=0);
+ return h;
+}
+void evalpoly(NODE h1)
+{
+ int x,y,z;
+ float result=0.0;
+ NODE temp=h1->link;
+ printf("\nenter the value of x,y,z:");
+ scanf("%d%d%d",&x,&y,&z);
+ while(temp!=h1)
+ {
+ result=result+temp->cf*pow(x,temp->px)*pow(x,temp->py)*pow(z,temp-
+>pz);
+ temp=temp->link;
+ }
+ printf("\nthe result=%f\n",result);
+}
+void display(NODE h1)
+{
+ NODE temp;
+ if(h1->link==h1)
+ {
+ printf("\npolynomial is empty");
+ return;
+ }
+temp=h1->link;
+ while(temp!=h1)
+ {
+ if(temp->cf>0)
+ printf("+%dx%dy%dz%d",temp->cf,temp->px,temp->py,temp->pz);
+ else
+ printf("%dx%dy%dz%d",temp->cf,temp->px,temp->py,temp->pz);
+ temp=temp->link;
+}
+}
+NODE addpoly(NODE h1,NODE h2,NODE h3)
+{
+ NODE p1,p2;
+ int cf1,px1,py1,pz1,cf2,px2,py2,pz2,cf;
+ p1=h1->link;
+ while(p1!=h1)
+ {
+ cf1=p1->cf;
+ px1=p1->px;
+ py1=p1->py;
+ pz1=p1->pz;
+ p2=h2->link;
+ while(p2!=h2)
+ {
+ cf2=p2->cf;
+ px2=p2->px;
+ py2=p2->py;
+ pz2=p2->pz;
+ if(px1==px2&&py1==py2&&pz1==pz2)
+ break;
+ p2=p2->link; 
+ }
+ if(p2!=h2)
+ {
+ cf=cf1+cf2;
+ p2->flag=1;
+ if(cf!=0)
+ h3=insertrear(h3,cf,px1,py1,pz1);
+ p1=p1->link;
+ p2=p2->link;
+ }
+ else
+{
+ h3=insertrear(h3,cf1,px1,py1,pz1);
+p1=p1->link;
+ }
+ }
+ p2=h2->link;
+ while(p2!=h2)
+ {
+ if(p2->flag==0)
+ h3=insertrear(h3,p2->cf,p2->px,p2->py,p2->pz);
+ p2=p2->link;
+ }
+ return h3;
+} 
+ 
+void main()
+{
+ int ch;
+ NODE h1,h2,h3;
+ h1=(NODE)malloc(sizeof(struct poly));
+ h2=(NODE)malloc(sizeof(struct poly));
+ h3=(NODE)malloc(sizeof(struct poly));
+ h1->link=h1;
+ h2->link=h2;
+ h3->link=h3;
+ while(1)
+ {
+ printf("\n1.evaluate a polynomial\n2.add polynomial\n3.exit\n"); 
+ printf("enter choice:");
+ scanf("%d",&ch);
+ switch(ch)
+ {
+ case 1 : printf("enter polynomial:");
+ h1= readpoly(h1);
+ evalpoly(h1);
+ display(h1);
+ h1->link=h1;
+ break;
+ case 2 : printf("enter 1st polynomial:");
+ h1=readpoly(h1);
+ printf("enter 2nd polynomial:");
+ h2=readpoly(h2);
+ h3=addpoly(h1,h2,h3);
+ printf("\n1st polynomial is\n");
+ display(h1);printf("\n");
+ printf("\n2nd polynomial is\n");
+display(h2);printf("\n");
+ printf("\nresultant polynomial is \n");
+ display(h3);printf("\n");
+ break;
+ case 3 : exit(0);
+ }
+ }
+}
+
+10 binary search tree 
+#include<stdio.h>
+#include<stdlib.h>
+struct node
+{
+ int info;
+ struct node *llink;
+ struct node *rlink;
+};
+typedef struct node *NODE;
+NODE insert(NODE root,int item)
+{
+ NODE temp,cur,prev;
+ temp=(NODE)malloc(sizeof(NODE));
+ temp->info=item;
+ temp->llink=temp->rlink=NULL;
+ if(root==NULL)
+ return temp;
+ cur=root;
+ while(cur!=NULL)
+ {
+ prev=cur;
+ if(cur->info==item)
+ {
+ printf("insertion not possible");
+ free(temp);
+ return;
+ }
+ if(cur->info > item)
+ cur=cur->llink;
+ else
+cur=cur->rlink;
+ }
+ if(prev->info>item)
+ prev->llink=temp;
+ else 
+ prev->rlink=temp;
+ return root;
+}
+void search(NODE root,int key)
+{
+ NODE cur;
+ cur=root;
+ if(root==NULL)
+ {
+ printf("tree is empty");
+ return;
+ }
+ while(cur!=NULL)
+ {
+ if(cur->info==key)
+ {
+ printf("key element is found");
+ return;
+ }
+ if((cur->info)>key)
+ cur=cur->llink;
+ else 
+ cur=cur->rlink;
+ }
+ printf("key not found");
+} 
+void preorder(NODE root)
+{
+if(root==NULL) return;
+printf("%d\t",root->info);
+preorder(root->llink);
+preorder(root->rlink);
+}
+void postorder(NODE root)
+{
+ if(root==NULL)return;
+ postorder(root->llink);
+ postorder(root->rlink);
+ printf("%d\t",root->info);
+}
+void inorder(NODE root)
+{
+ if(root==NULL)return;
+ inorder(root->llink);
+ printf("%d\t",root->info);
+ inorder(root->rlink);
+}
+void main()
+{
+ int ch,x,item,key;
+ NODE root=NULL;
+ while(1)
+ {
+ printf("\n1.create a BST\n2.traverse inpreorder\n3.traverse in 
+postorder\n4.inorder");
+ printf("\n5.search in a BST\n6.exit");
+ printf("\nenter choice:");
+ scanf("%d",&ch);
+ switch(ch)
+ {
+ case 1 : do
+ {
+ printf("enter the element to be inserted:");
+ scanf("%d",&item);
+ root=insert(root,item);
+ printf("enter 1 to continue 0 to exit");
+ scanf("%d",&x);
+ }while(x!=0);
+ break;
+ case 2 : preorder(root); 
+ break;
+ case 3 : postorder(root);
+ break;
+ case 4 : inorder(root);
+ break;
+ case 5 : printf("enter the element to search:");
+ scanf("%d",&key);
+ search(root,key);
+ break;
+ case 6 : exit(0);
+ }
+ }
+}
+
+
+/* 11.Graph traversal Using BFS and DFS */
+#include<stdio.h>
+#include<stdlib.h>
+int a[10][10],n,s[10]={0};
+void bfs(int u)
+ {
+ int f,r,q[10],v,i,s[10]={0};
+ printf("The Nodes visited from %d:",u);
+ f=0;r=-1; 
+ q[++r]=u; 
+ s[u]=1; 
+ printf(" %d",u);
+ while(f<=r)
+ {
+ u=q[f++]; 
+ for(v=0;v<n;v++)
+ if(a[u][v]==1) 
+ if(s[v]==0) 
+ {
+ printf(" %d",v); 
+ s[v]=1; 
+ q[++r]=v; 
+ }
+ }
+ printf("\n");
+ }
+void dfs(int u)
+ { 
+ int v;
+ s[u]=1;
+ printf("%d ",u);
+ for(v=0;v<n;v++)
+ if(a[u][v] ==1 && s[v]==0)
+ dfs(v);
+ }
+int main()
+{ 
+ int u,i,j,ch;
+ while(1)
+ {
+ printf("\n1.Create a graph");
+ printf("\n2.Traversal using BFS");
+ printf("\n3.Traversal using DFS");
+ printf("\n4.Exit");
+ printf("\nEnter your choice :");
