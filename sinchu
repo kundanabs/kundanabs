@@ -55,54 +55,61 @@ int main(){
 }
 
 
-
-program 02:
+2.String Matching 
 #include<stdio.h>
+#include<stdlib.h>
 #include<string.h>
-void readstring(char str[100],char pat[50],char rep[50]){
-    printf("enter the main string\n");
-    gets(str);
-    printf("enter the patter string\n");
-    gets(pat);
-    printf("enter the replace\n");
-    gets(rep);
-}
-void replacestring(char str[100],char pat[50],char rep[50]){
-    int i=0,j=0,k=0,flag=0,m=0,c=0;
-    char ans[100];
-    while(str[c]!='\0'){
-        if(str[m]==pat[i]){
-            m++;i++;
-            flag=1;
-            if(pat[i]=='\0'){
-            for(k=0;rep[k]!='\0';k++,j++)
-            ans[j]=rep[k];
-            i=0;c=m;
-        }
-    }
-    else{
-        ans[j]=str[c];
-        j++;c++;
-        i=0;m=c;
-    }
-}
-if(flag==0){
-    printf("pattern does not found\n");
-}
-else{
-    ans[j]='\0';
-    printf("the resultant string is %s",ans);
+void stringmatch(char str[100],char pat[50],char rep[50])
+{
+int i=0,m=0,c=0,j=0,k=0,flag=0;
+char ans[50];
+while(str[c]!='\0')
+{
+if(str[m]==pat[i])
+{
+i++;
+m++;
+if(pat[i]=='\0')
+{
+flag=1;
+for(k=0;rep[k]!='\0';k++,j++)
+ans[j]=rep[k];
+i=0;
+c=m;
 }
 }
-int main(){
-    char str[100],pat[50],rep[50];
-    readstring(str,pat,rep);
-    replacestring(str,pat,rep);
-    return 0;
+else
+{
+ans[j]=str[c];
+j++;
+c++;
+m=c;i=0;
+}
+}
+ans[j]='\0';
+if(flag==1)
+printf("\n The resultant string is \n %s",ans);
+else
+printf("\n Pattern string NOT found \n");
+}
+void readstring(char str[],char pat[],char rep[])
+{
+printf("\n Enter a main string \n");
+gets(str);
+printf("\n Enter a pattern string \n");
+gets(pat);
+printf("\n Enter a replace string \n");
+gets(rep);
+}
+void main()
+{
+char str[100],pat[50],rep[50];
+readstring(str,pat,rep);
+stringmatch(str,pat,rep);
 }
 
 
-program 03:
+program 03 
 #include<stdio.h>
 #include<stdlib.h>
 #define max 4
@@ -239,64 +246,100 @@ void infixtopostfix(char in[],char post[]){
 }
 
 
-
-program 05:
+5.Evaluation of suffix Expression */
 #include<stdio.h>
 #include<stdlib.h>
 #include<math.h>
-#include<ctype.h>
-void push(float stk[],int *top,float op){
-    *top=*top+1;
-    stk[*top]=op;
+void tower(int n,int source,int temp,int destination)
+{
+ if(n==0)
+ return;
+ tower(n-1,source,destination,temp);
+ printf("\n move disc %d from %c to %c",n,source,destination);
+ tower(n-1,temp,source,destination);
 }
-float pop(float stk[], int *top){
-    float res;
-    res=stk[*top];
-    *top=*top-1;
-    return res;
+void push(float stk[],int *top,float op)
+{
+ *top=*top+1;
+ stk[*top]=op;
 }
-float compute(float op1,float op2,char s){
-    switch(s){
-        case '+':return op1+op2;
-        break;
-        case '-':return op1-op2;
-        break;
-        case '*':return op1*op2;
-        break;
-        case '/':return op1/op2;
-        break;
-        case '^':return pow(op2,op1);
-        break;
-    }
+int pop(float stk[],int *top)
+{
+ float res;
+if(*top==-1)
+ {
+ printf("stack is underflow");
+ return;
+ }
+ else
+ {
+ res=stk[*top];
+ *top=*top-1;
+ return res;
+ }
 }
-void evalpostfix(){
-    int i=0,j=0,top=-1;
-    char sym,post[20];
-    float stk[20],op1,op2,res,item;
-    printf("enter valid postfix expression\n");
-    scanf("%s",post);
-    while(post[i]!='\0'){
-        sym=post[i++];
-        if(isdigit(sym))
-        {
-            item=sym-'0';
-            push(stk,&top,item);
-        }
-        else
-        {
-            op2=pop(stk,&top);
-            op1=pop(stk,&top);
-            res=compute(op1,op2,sym);
-            push(stk,&top,res);
-        }
-    }
-     res=pop(stk,&top);
-     printf("the result of postfix expression is %f",res );
-    }
-void main(){
-    evalpostfix();
+float compute(float op1,float op2,char s)
+{
+switch(s)
+{
+case '+' : return (op1+op2);
+case '-' : return (op1-op2);
+case '*' : return (op1*op2);
+case '/' : return (op1/op2);
+case '$' :
+case '^' : return pow(op2,op1);
 }
-
+}
+void evalpostfix()
+{
+char sym,post[20];
+ int i=0,j=0,top=-1;
+ float stk[20],item,op1,op2,res;
+ printf("enter the valid postfix expn:");
+ scanf("%s",post);
+ while(post[i]!='\0')
+ {
+ sym=post[i++];
+ if(isdigit(sym))
+ {
+ item=sym-'0';
+ push(stk,&top,item);
+ }
+ else
+ {
+ op2=pop(stk,&top);
+ op1=pop(stk,&top);
+ res=compute(op1,op2,sym);
+ push(stk,&top,res);
+ }
+ }
+ res=pop(stk,&top);
+printf("the result of evaluation of postfix expn is %f",res);
+}
+void main()
+{
+ int n,ch;
+ printf("\n main menu");
+while(1)
+ {
+ printf("\n 1.evalution of postfix expn");
+ printf("\n 2.tower of honoi");
+ printf("\n 3.exit");
+ printf("\nenter your choice:");
+ scanf("%d",&ch);
+ switch(ch)
+ {
+ case 2: printf("\n enter the no. of discs :");
+ scanf("%d",&n);
+ tower(n,'A','B','C');
+ printf("\n total no. of moves are"); 
+ break;
+ case 1: evalpostfix();
+break;
+ case 3: exit(0);
+ }
+}
+}
 
 program 06:
 #include<stdio.h>
@@ -366,62 +409,9 @@ void main(){
 
 
 
-2.String Matching 
-#include<stdio.h>
-#include<stdlib.h>
-#include<string.h>
-void stringmatch(char str[100],char pat[50],char rep[50])
-{
-int i=0,m=0,c=0,j=0,k=0,flag=0;
-char ans[50];
-while(str[c]!='\0')
-{
-if(str[m]==pat[i])
-{
-i++;
-m++;
-if(pat[i]=='\0')
-{
-flag=1;
-for(k=0;rep[k]!='\0';k++,j++)
-ans[j]=rep[k];
-i=0;
-c=m;
-}
-}
-else
-{
-ans[j]=str[c];
-j++;
-c++;
-m=c;i=0;
-}
-}
-ans[j]='\0';
-if(flag==1)
-printf("\n The resultant string is \n %s",ans);
-else
-printf("\n Pattern string NOT found \n");
-}
-void readstring(char str[],char pat[],char rep[])
-{
-printf("\n Enter a main string \n");
-gets(str);
-printf("\n Enter a pattern string \n");
-gets(pat);
-printf("\n Enter a replace string \n");
-gets(rep);
-}
-void main()
-{
-char str[100],pat[50],rep[50];
-readstring(str,pat,rep);
-stringmatch(str,pat,rep);
-}
 
 
-
-stack 
+stack
 #include<stdio.h>
 #include<stdlib.h>
 #define maxsize 4
