@@ -1,4 +1,372 @@
- 2.String Matching 
+program 1:
+#include<stdio.h>
+#include<stdlib.h>
+struct day{
+    char *dayname;
+    int date,month,year;
+    char *activitydescription;
+};
+struct day *createcalender(int size){
+    struct day *calender=(struct day*)malloc(size*sizeof(struct day));
+    if(calender==NULL){
+        printf("memory allocation failed");
+        exit (0);
+    }
+    return calender;
+}
+void readdata(struct day *calender, int size){
+    for(int i=0;i<size;i++){
+        printf("enter the detailes of the %d day",i+1);
+        printf("dayname:");
+        calender[i].dayname=(char*)malloc(20*sizeof(char));
+        scanf("%s",calender[i].dayname);
+        printf("date:\n");
+        scanf("%d",&calender[i].date);
+        printf("month:\n");
+        scanf("%d",&calender[i].month);
+        printf("year:\n");
+        scanf("%d",&calender[i].year);
+        printf("activity description:\n");
+        calender[i].activitydescription=(char*)malloc(50*sizeof(char));
+        scanf("%s",calender[i].activitydescription);
+    }
+}
+void display(struct day *calender,int size){
+    printf("dayname\tdate\tactivitydescription\n");
+    for(int i=0;i<size;i++){
+        printf("%s\t\t%d-%d-%d\t\t%s\n",calender[i].dayname,calender[i].date,calender[i].month,calender[i].year,calender[i].activitydescription);
+    }
+}
+void freememory(struct day *calender,int size){
+    for(int i=0;i<size;i++){
+        free(calender[i].dayname);
+        free(calender[i].activitydescription);
+    }
+    free(calender);
+}
+int main(){
+    int size;
+    printf("enter the number of days\n");
+    scanf("%d",&size);
+    struct day *calender=createcalender(size);
+    readdata(calender,size);
+    display(calender,size);
+    freememory(calender,size);
+}
+
+
+
+program 02:
+#include<stdio.h>
+#include<string.h>
+void readstring(char str[100],char pat[50],char rep[50]){
+    printf("enter the main string\n");
+    gets(str);
+    printf("enter the patter string\n");
+    gets(pat);
+    printf("enter the replace\n");
+    gets(rep);
+}
+void replacestring(char str[100],char pat[50],char rep[50]){
+    int i=0,j=0,k=0,flag=0,m=0,c=0;
+    char ans[100];
+    while(str[c]!='\0'){
+        if(str[m]==pat[i]){
+            m++;i++;
+            flag=1;
+            if(pat[i]=='\0'){
+            for(k=0;rep[k]!='\0';k++,j++)
+            ans[j]=rep[k];
+            i=0;c=m;
+        }
+    }
+    else{
+        ans[j]=str[c];
+        j++;c++;
+        i=0;m=c;
+    }
+}
+if(flag==0){
+    printf("pattern does not found\n");
+}
+else{
+    ans[j]='\0';
+    printf("the resultant string is %s",ans);
+}
+}
+int main(){
+    char str[100],pat[50],rep[50];
+    readstring(str,pat,rep);
+    replacestring(str,pat,rep);
+    return 0;
+}
+
+
+program 03:
+#include<stdio.h>
+#include<stdlib.h>
+#define max 4
+void push(int s[],int *top){
+    int ele;
+    if(*top==max-1){
+        printf("stach overflow");
+    }
+    else{
+        printf("enter the item to be inserted in the stack");
+        scanf("%d",&ele);
+        s[++(*top)]=ele;
+    }
+}
+int pop(int s[],int *top){
+    return (s[(*top)--]);
+}
+void palindrom(int v[],int top){
+    int i=0,flag=0,ele;
+    for(i=0;i<(top+1);i++){
+    ele=pop(v,&top);
+    if(ele==v[i])
+    flag=1;
+    else
+    flag=0;
+}
+if(flag==0)
+    printf("stack elements are not palindrom");
+    else
+    printf("stack elements are palindrom");
+}
+void display(int s[],int top){
+    int i;
+    if(top==-1)
+        printf("stack underflow\n");
+        else{
+            printf("the stack elements are:\n");
+            for(int i=0;i<=top;i++)
+            printf("%d",s[i]);
+        }
+    }
+    int main(){
+        int ch,ele,s[max],top=-1;
+        while(1){
+        printf("menu option\n1.push into stack\n2.pop from the top\n3.palindrom\n4.display\n5.exit\n");
+        printf("enter your choice\n");
+        scanf("%d",&ch);
+        switch(ch){
+            case 1:push(s,&top);
+            break;
+            case 2:if(top==-1){
+                printf("stack underflow\n");
+            }
+            else{
+                ele=pop(s,&top);
+                printf("the deleted element is %d",ele);
+            }
+            break;
+            case 3:palindrom(s,top);
+            break;
+            case 4:display(s,top);
+            break;
+            case 5:exit(1);
+            break;
+            default:printf("enter the valid choice\n");
+            break;
+            
+            }
+            }
+        }
+
+
+
+        program 04:
+        #include<stdio.h>
+#include<string.h>
+int f(char);
+int g(char);
+void infixtopostfix(char[],char[]);
+int f(char sym){
+    switch(sym){
+        case '+':
+        case '-':return 2;
+        case '*':
+        case '/':
+        case '%':return 4;
+        case '^':
+        case '$':return 5;
+        case '(':return 0;
+        case '#':return -1;
+        default: return 8;
+    }
+}
+int g(char sym){
+    switch(sym){
+        case '+':
+        case '-':return 1;
+        case '*':
+        case '/':
+        case '%':return 3;
+        case '^':
+        case '$':return 6;
+        case '(':return 9;
+        case ')':return 0;
+        default: return 7;
+    }
+}
+int main(){
+    char infix[50],postfix[50];
+    printf("enter the infix expression\n");
+    scanf("%s",infix);
+    infixtopostfix(infix,postfix);
+    printf("infix expression is %s and the equvalent postfix expression is %s",infix,postfix);
+    return 0;
+}
+void infixtopostfix(char in[],char post[]){
+    int i=0,j=0,top=-1;
+    char stk[50],sym;
+    stk[++top]='#';
+    while(in[i]!='\0'){
+        sym=in[i++];
+        while(f(stk[top])>g(sym))
+            post[j++]=stk[top--];
+            if(f(stk[top])!=g(sym))
+            stk[++top]=sym;
+            else
+            stk[top--];
+        }
+    
+    while(stk[top]!='#'){
+        post[j++]=stk[top--];
+    }
+    post[j++]='\0';
+}
+
+
+
+program 05:
+#include<stdio.h>
+#include<stdlib.h>
+#include<math.h>
+#include<ctype.h>
+void push(float stk[],int *top,float op){
+    *top=*top+1;
+    stk[*top]=op;
+}
+float pop(float stk[], int *top){
+    float res;
+    res=stk[*top];
+    *top=*top-1;
+    return res;
+}
+float compute(float op1,float op2,char s){
+    switch(s){
+        case '+':return op1+op2;
+        break;
+        case '-':return op1-op2;
+        break;
+        case '*':return op1*op2;
+        break;
+        case '/':return op1/op2;
+        break;
+        case '^':return pow(op2,op1);
+        break;
+    }
+}
+void evalpostfix(){
+    int i=0,j=0,top=-1;
+    char sym,post[20];
+    float stk[20],op1,op2,res,item;
+    printf("enter valid postfix expression\n");
+    scanf("%s",post);
+    while(post[i]!='\0'){
+        sym=post[i++];
+        if(isdigit(sym))
+        {
+            item=sym-'0';
+            push(stk,&top,item);
+        }
+        else
+        {
+            op2=pop(stk,&top);
+            op1=pop(stk,&top);
+            res=compute(op1,op2,sym);
+            push(stk,&top,res);
+        }
+    }
+     res=pop(stk,&top);
+     printf("the result of postfix expression is %f",res );
+    }
+void main(){
+    evalpostfix();
+}
+
+
+program 06:
+#include<stdio.h>
+#include<stdlib.h>
+#define max 2
+void insert(char q[],int *r,int *count){
+    int ele;
+    if(*count==max){
+        printf("queue overflow\n");
+        return;
+    }
+    else{
+     *r=(*r+1)%max;
+    printf("enter the element to be inserted\n");
+    scanf("%s",&ele);
+    q[*r]=ele;
+    (*count)++;
+    }
+}
+void deleteele(char q[],int *f,int *count){
+    if(*count==0){
+        printf("queue underflow\n");
+        return;
+    }
+    else{
+        printf("deleted element is %s",q[*f]);
+        *f=(*f+1)%max;
+      ( *count)--;
+    }
+}
+void display(char q[],int f,int count){
+    int j,i;
+    if(count==0){
+        printf("queue underflow\n");
+        return;
+    }
+    else{
+        j=f;
+        for(i=0;i<count;i++){
+            printf("%d",q[j]);
+            j=(j+1)%max;
+        }
+    }
+}
+void main(){
+    int ch;
+    char q[max];
+    int f=0,r=-1,count=0;
+    while(1){
+        printf("menu option\n1.insert into the queue\n2.delete from the queue\n3.display\n 4.exit\n");
+        printf("enter your choice\n");
+        scanf("%d",&ch);
+        switch(ch){
+            case 1:insert(q,&r,&count);
+            break;
+            case 2:deleteele(q,&f,&count);
+            break;
+            case 3:display(q,f,count);
+            break;
+            case 4:exit(0);
+            break;
+            default:printf("enter the valid choice\n");
+            break;
+        }
+    }
+} 
+
+
+
+2.String Matching 
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
